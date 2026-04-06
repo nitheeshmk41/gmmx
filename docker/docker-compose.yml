@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: gmmx-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-gmmx}
+      POSTGRES_USER: ${POSTGRES_USER:-gmmx}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-gmmx123}
+    ports:
+      - "5432:5432"
+    volumes:
+      - gmmx_pg_data:/var/lib/postgresql/data
+      - ../database/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-gmmx}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: gmmx-backend
+    environment:
+      DB_URL: ${DB_URL:-jdbc:postgresql://postgres:5432/gmmx}
+      DB_USERNAME: ${DB_USERNAME:-gmmx}
+      DB_PASSWORD: ${DB_PASSWORD:-gmmx123}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:8081}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ../web
+      dockerfile: Dockerfile
+    container_name: gmmx-web
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8080}
+      NEXT_PUBLIC_ROOT_DOMAIN: ${NEXT_PUBLIC_ROOT_DOMAIN:-gmmx.app}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: gmmx-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - web
+
+volumes:
+  gmmx_pg_data:

@@ -1,0 +1,29 @@
+# Env
+.env
+*.env.local
+
+# Node / Next
+web/node_modules/
+web/.next/
+web/out/
+
+# Java / Maven
+backend/target/
+backend/.mvn/
+
+# Flutter / Dart
+mobile/.dart_tool/
+mobile/build/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.packages
+mobile/pubspec.lock
+
+# IDE / OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.iml
+Thumbs.db
+.DS_Store
