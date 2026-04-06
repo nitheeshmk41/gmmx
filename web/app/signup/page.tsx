@@ -50,29 +50,53 @@ export default function SignupPage() {
 
   return (
     <main className="container">
-      <h1>Owner Onboarding</h1>
-      <p>Create your gym and start the 14-day free trial.</p>
+      <header className="page-head">
+        <span className="pill">Owner Onboarding</span>
+        <h1>Launch Your Gym Workspace</h1>
+        <p>Create your gym and start your 14-day free trial in one flow.</p>
+      </header>
 
-      <form className="card" onSubmit={onSubmit} style={{ maxWidth: 620 }}>
-        <label>Owner Name<input className="input" name="ownerName" required /></label>
-        <label>Mobile (10 digits)<input className="input" name="mobile" pattern="[0-9]{10}" required /></label>
-        <label>Email<input className="input" name="email" type="email" required /></label>
-        <label>Gym Name<input className="input" name="gymName" required /></label>
-        <label>Location<input className="input" name="location" required /></label>
-        <label>Gym Slug<input className="input" name="slug" pattern="[a-z0-9-]{3,30}" required /></label>
-        <label>Password<input className="input" name="password" type="password" minLength={6} required /></label>
-        <button className="button" type="submit" disabled={loading} style={{ marginTop: 16 }}>
+      <form className="card form-stack" onSubmit={onSubmit} style={{ maxWidth: 720 }}>
+        <label>
+          Owner Name
+          <input className="input" name="ownerName" required />
+        </label>
+        <label>
+          Mobile (10 digits)
+          <input className="input" name="mobile" pattern="[0-9]{10}" required />
+        </label>
+        <label>
+          Email
+          <input className="input" name="email" type="email" required />
+        </label>
+        <label>
+          Gym Name
+          <input className="input" name="gymName" required />
+        </label>
+        <label>
+          Location
+          <input className="input" name="location" required />
+        </label>
+        <label>
+          Gym Slug
+          <input className="input" name="slug" pattern="[a-z0-9-]{3,30}" required />
+        </label>
+        <label>
+          Password
+          <input className="input" name="password" type="password" minLength={6} required />
+        </label>
+        <button className="button" type="submit" disabled={loading} style={{ marginTop: 10 }}>
           {loading ? "Creating..." : "Create Gym"}
         </button>
       </form>
 
-      {error && <p style={{ color: "crimson" }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
       {result && (
-        <section className="card" style={{ marginTop: 16 }}>
+        <section className="card success">
           <h2>Success</h2>
           <p>Tenant created: {result.slug}.gmmx.app</p>
           <p>Trial ends at: {new Date(result.trialEndsAt).toLocaleString()}</p>
-          <a className="button" href={`/${result.slug}/dashboard`}>Go to Dashboard</a>
+          <a className="button" href={`/${result.slug}/dashboard`} style={{ marginTop: 8 }}>Go to Dashboard</a>
         </section>
       )}
     </main>

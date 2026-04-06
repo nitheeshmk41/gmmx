@@ -1,5 +1,16 @@
 import type { Metadata } from "next";
+import { Manrope, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+
+const bodyFont = Manrope({
+  subsets: ["latin"],
+  variable: "--font-body"
+});
+
+const headingFont = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-heading"
+});
 
 export const metadata: Metadata = {
   title: "GMMX",
@@ -9,7 +20,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={`${bodyFont.variable} ${headingFont.variable}`}>{children}</body>
     </html>
   );
 }

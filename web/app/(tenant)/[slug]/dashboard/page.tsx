@@ -57,20 +57,36 @@ export default function DashboardPage() {
 
   return (
     <main className="container">
-      <h1>{slug} Dashboard</h1>
-      {error && <p style={{ color: "crimson" }}>{error}</p>}
+      <header className="page-head">
+        <span className="pill">Owner Dashboard</span>
+        <h1>{slug} Dashboard</h1>
+        <p>Track usage, manage team, and keep trial progress on one screen.</p>
+      </header>
+      {error && <p className="error">{error}</p>}
 
       {summary && (
         <section className="grid grid-3">
-          <div className="card"><h3>Members</h3><p>{summary.activeMembers}/{summary.memberLimit}</p></div>
-          <div className="card"><h3>Trainers</h3><p>{summary.activeTrainers}/{summary.trainerLimit}</p></div>
-          <div className="card"><h3>Today Attendance</h3><p>{summary.todayAttendance}</p></div>
-          <div className="card"><h3>Trial Days Left</h3><p>{summary.trialDaysLeft}</p></div>
+          <div className="kpi">
+            <p className="kpi-title">Members</p>
+            <p className="kpi-value">{summary.activeMembers}/{summary.memberLimit}</p>
+          </div>
+          <div className="kpi">
+            <p className="kpi-title">Trainers</p>
+            <p className="kpi-value">{summary.activeTrainers}/{summary.trainerLimit}</p>
+          </div>
+          <div className="kpi">
+            <p className="kpi-title">Today Attendance</p>
+            <p className="kpi-value">{summary.todayAttendance}</p>
+          </div>
+          <div className="kpi">
+            <p className="kpi-title">Trial Days Left</p>
+            <p className="kpi-value">{summary.trialDaysLeft}</p>
+          </div>
         </section>
       )}
 
       <section className="grid grid-3" style={{ marginTop: 20 }}>
-        <form className="card" onSubmit={(e) => addUser(e, "member")}>
+        <form className="card form-stack" onSubmit={(e) => addUser(e, "member")}>
           <h3>Add Member</h3>
           <input className="input" name="fullName" placeholder="Name" required />
           <input className="input" name="mobile" placeholder="Mobile" pattern="[0-9]{10}" required />
@@ -78,7 +94,7 @@ export default function DashboardPage() {
           <button className="button" type="submit" style={{ marginTop: 12 }}>Add Member</button>
         </form>
 
-        <form className="card" onSubmit={(e) => addUser(e, "trainer")}>
+        <form className="card form-stack" onSubmit={(e) => addUser(e, "trainer")}>
           <h3>Add Trainer</h3>
           <input className="input" name="fullName" placeholder="Name" required />
           <input className="input" name="mobile" placeholder="Mobile" pattern="[0-9]{10}" required />

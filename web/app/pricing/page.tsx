@@ -7,15 +7,21 @@ const plans = [
 export default function PricingPage() {
   return (
     <main className="container">
-      <h1>Pricing</h1>
-      <p>Simple plans for Indian gyms, billed monthly.</p>
-      <section className="grid grid-3" style={{ marginTop: 16 }}>
+      <header className="page-head">
+        <span className="pill">No Hidden Costs</span>
+        <h1>Simple Pricing</h1>
+        <p>Transparent monthly plans for independent gyms and fast-growing studios.</p>
+      </header>
+
+      <section className="grid grid-3">
         {plans.map((plan) => (
           <article className="card" key={plan.name}>
             <h2>{plan.name}</h2>
-            <p style={{ fontSize: 28, margin: "8px 0" }}>Rs. {plan.price}</p>
-            <p>{plan.members} members</p>
-            <p>{plan.trainers} trainers</p>
+            <p className="plan-price">Rs. {plan.price}</p>
+            <p className="muted">Per month</p>
+            <hr style={{ border: 0, borderTop: "1px solid var(--line)", margin: "14px 0" }} />
+            <p>{plan.members} member capacity</p>
+            <p>{plan.trainers} trainer capacity</p>
           </article>
         ))}
       </section>
