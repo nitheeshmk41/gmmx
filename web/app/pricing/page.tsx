@@ -1,30 +1,74 @@
-const plans = [
-  { name: "Starter", price: "1499", members: 100, trainers: 10 },
-  { name: "Growth", price: "2999", members: 300, trainers: 30 },
-  { name: "Pro", price: "4999", members: 1000, trainers: 100 }
-];
+import Link from "next/link";
+import { Footer } from "@/components/footer";
+import { PricingCard } from "@/components/pricing-card";
+import { WebsiteUpsellCard } from "@/components/website-upsell-card";
+import { saasPlans } from "@/lib/plans";
+import { getWhatsAppLink, siteConfig, siteUrl } from "@/lib/site";
+
+export const metadata = {
+  title: "Pricing"
+};
+
+const pricingSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: "GMMX Gym SaaS Plans",
+  description: "Monthly plans for gym operations, CRM, attendance and white-label websites.",
+  brand: {
+    "@type": "Brand",
+    name: "GMMX"
+  },
+  offers: saasPlans.map((plan) => ({
+    "@type": "Offer",
+    priceCurrency: "INR",
+    price: String(plan.amountInPaise / 100),
+    category: plan.type,
+    availability: "https://schema.org/InStock",
+    url: `${siteUrl}/pricing`
+  }))
+};
 
 export default function PricingPage() {
   return (
-    <main className="container">
-      <header className="page-head">
-        <span className="pill">No Hidden Costs</span>
-        <h1>Simple Pricing</h1>
-        <p>Transparent monthly plans for independent gyms and fast-growing studios.</p>
-      </header>
+    <main>
+      <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <header className="mx-auto max-w-3xl text-center">
+          <p className="section-kicker">Pricing</p>
+          <h1 className="mt-2 text-4xl font-black text-slate-900 dark:text-white md:text-5xl">Transparent plans, built for every gym stage</h1>
+          <p className="mt-4 text-slate-600 dark:text-slate-300">
+            Start with the plan that fits your operations today and scale as your gym grows.
+          </p>
+        </header>
 
-      <section className="grid grid-3">
-        {plans.map((plan) => (
-          <article className="card" key={plan.name}>
-            <h2>{plan.name}</h2>
-            <p className="plan-price">Rs. {plan.price}</p>
-            <p className="muted">Per month</p>
-            <hr style={{ border: 0, borderTop: "1px solid var(--line)", margin: "14px 0" }} />
-            <p>{plan.members} member capacity</p>
-            <p>{plan.trainers} trainer capacity</p>
-          </article>
-        ))}
-      </section>
+        <section className="mt-10 grid gap-5 lg:grid-cols-3">
+          {saasPlans.map((plan) => (
+            <PricingCard key={plan.id} plan={plan} />
+          ))}
+        </section>
+
+        <WebsiteUpsellCard />
+
+        <section className="mt-12 rounded-2xl border border-slate-200 bg-white/80 p-6 dark:border-slate-700 dark:bg-slate-900/70">
+          <h2 className="text-2xl font-black text-slate-900 dark:text-white">Need custom onboarding support?</h2>
+          <p className="mt-2 text-slate-600 dark:text-slate-300">
+            Talk to our team for migration help, multi-branch setup, and operations workflow design.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <a href={getWhatsAppLink("Hi GMMX, I need help selecting a plan.")} target="_blank" rel="noreferrer" className="btn-primary">
+              WhatsApp us
+            </a>
+            <a href={`tel:${siteConfig.phone}`} className="btn-outline">Call sales</a>
+            <Link href="/signup" className="btn-outline">Book demo</Link>
+          </div>
+        </section>
+
+        <Footer />
+      </div>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingSchema) }}
+      />
     </main>
   );
 }
