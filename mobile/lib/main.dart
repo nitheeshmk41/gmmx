@@ -2,8 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/ui/app_theme.dart';
 import 'firebase_options.dart';
-import 'features/auth/presentation/login_page.dart';
+import 'features/auth/presentation/otp_request_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,31 +23,10 @@ class GmmxApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'GMMX',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFFF5C73), // Primary from tailwind
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFFF5C73),
-          foregroundColor: Colors.white,
-        ),
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFFF5C73), // Primary from tailwind
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFFF5C73),
-          foregroundColor: Colors.white,
-        ),
-      ),
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.dark,
-      home: const LoginPage(),
+      home: const OtpRequestPage(),
     );
   }
 }
