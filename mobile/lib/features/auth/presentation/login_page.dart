@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../home/presentation/home_page.dart';
+import '../../../core/home_page.dart';
 import 'auth_controller.dart';
 
 enum LoginMode { backendOtp, firebasePhone, firebaseEmailOtp }
@@ -42,7 +42,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       final user = next.asData?.value.user;
       if (user != null) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => HomePage(user: user)),
+          MaterialPageRoute(builder: (_) => const HomePage()),
         );
       }
     });

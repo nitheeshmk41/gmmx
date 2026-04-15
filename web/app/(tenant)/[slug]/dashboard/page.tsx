@@ -2,7 +2,12 @@
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { DashboardSummary } from "@/lib/api";
+import {
+  createMember,
+  createTrainer,
+  DashboardSummary,
+  fetchDashboardSummary
+} from "@/lib/api";
 
 export default function DashboardPage() {
   const params = useParams<{ slug: string }>();
@@ -14,9 +19,7 @@ export default function DashboardPage() {
   const fetchSummary = useCallback(async () => {
     try {
       setError("");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/summary?tenantSlug=${slug}`);
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error ?? "Failed to load summary");
+      const data = await fetchDashboardSummary(slug);
       setSummary(data);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load summary");
@@ -39,15 +42,14 @@ export default function DashboardPage() {
       email: String(form.get("email") ?? "")
     };
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/${endpoint}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-      const body = await response.json();
-      alert(body.error ?? "Create failed");
+    try {
+      if (endpoint == "member") {
+        await createMember(payload);
+      } else {
+        await createTrainer(payload);
+      }
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Create failed");
       return;
     }
 

@@ -92,7 +92,7 @@ class ProfileSettingsPage extends ConsumerWidget {
 class _ProfileTab extends ConsumerWidget {
   final UserProfile profile;
   final WidgetRef ref;
-  _ProfileTab(this.profile, this.ref);
+  const _ProfileTab(this.profile, this.ref);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -189,7 +189,7 @@ class _ProfileTab extends ConsumerWidget {
 class _SettingsTab extends ConsumerWidget {
   final int threshold;
   final WidgetRef ref;
-  _SettingsTab(this.threshold, this.ref);
+  const _SettingsTab(this.threshold, this.ref);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -298,7 +298,7 @@ class _EditableField extends StatefulWidget {
   final String label, initialValue;
   final IconData icon;
   final Function(String) onSave;
-  _EditableField({required this.label, required this.initialValue, required this.icon, required this.onSave});
+  const _EditableField({required this.label, required this.initialValue, required this.icon, required this.onSave});
 
   @override
   State<_EditableField> createState() => _EditableFieldState();
@@ -392,7 +392,7 @@ class _ToggleTile extends StatefulWidget {
   final String label;
   final bool initialValue;
   final Function(bool) onChanged;
-  _ToggleTile(this.label, this.initialValue, this.onChanged);
+  const _ToggleTile(this.label, this.initialValue, this.onChanged);
 
   @override
   State<_ToggleTile> createState() => _ToggleTileState();
@@ -429,7 +429,7 @@ class _ToggleTileState extends State<_ToggleTile> {
                 setState(() => value = newValue);
                 widget.onChanged(newValue);
               },
-              activeColor: const Color(0xFFFF5C73),
+              activeThumbColor: const Color(0xFFFF5C73),
             ),
           ),
         ],
@@ -440,7 +440,7 @@ class _ToggleTileState extends State<_ToggleTile> {
 
 class _InfoTile extends StatelessWidget {
   final String label, value;
-  _InfoTile(this.label, this.value);
+  const _InfoTile(this.label, this.value);
 
   @override
   Widget build(BuildContext context) {

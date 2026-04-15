@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../features/attendance/presentation/attendance_marking_page.dart';
+import '../features/attendance/qr_attendance_page.dart';
 import '../features/client/presentation/client_list_page.dart';
 import '../features/dashboard/presentation/dashboard_page.dart';
 import '../features/plans/presentation/plan_list_page.dart';
@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   final List<_NavItem> items = const [
     _NavItem(label: 'Dashboard', icon: Icons.grid_view_rounded, page: DashboardPage()),
     _NavItem(label: 'Members', icon: Icons.groups_rounded, page: ClientListPage()),
-    _NavItem(label: 'Attendance', icon: Icons.location_on_rounded, page: AttendanceMarkingPage()),
+    _NavItem(label: 'Attendance', icon: Icons.location_on_rounded, page: QrAttendancePage()),
     _NavItem(label: 'Payments', icon: Icons.payments_rounded, page: PlanListPage()),
     _NavItem(label: 'Profile', icon: Icons.person_rounded, page: ProfileSettingsPage()),
   ];

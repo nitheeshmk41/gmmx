@@ -183,7 +183,7 @@ class ClientListPage extends ConsumerWidget {
                     Expanded(
                       child: _StatCard(
                         label: 'Total Members',
-                        value: '${clients.length}',
+                        value: clients.length.toString(),
                         icon: Icons.people_outlined,
                       ),
                     ),
@@ -191,7 +191,7 @@ class ClientListPage extends ConsumerWidget {
                     Expanded(
                       child: _StatCard(
                         label: 'Active',
-                        value: '${clients.where((c) => c.isActive).length}',
+                        value: clients.where((c) => c.isActive).length.toString(),
                         icon: Icons.check_circle_outlined,
                       ),
                     ),
@@ -199,7 +199,7 @@ class ClientListPage extends ConsumerWidget {
                     Expanded(
                       child: _StatCard(
                         label: 'Avg Attendance',
-                        value: '${(clients.fold<int>(0, (sum, c) => sum + c.attendanceCount) / clients.length).toStringAsFixed(0)}',
+                        value: (clients.fold<int>(0, (sum, c) => sum + c.attendanceCount) / clients.length).toStringAsFixed(0),
                         icon: Icons.check_outlined,
                       ),
                     ),

@@ -1,16 +1,12 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-
-type RegisterResponse = {
-  slug: string;
-  trialEndsAt: string;
-};
+import { registerOwner, RegisterOwnerResponse } from "@/lib/api";
 
 export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [result, setResult] = useState<RegisterResponse | null>(null);
+  const [result, setResult] = useState<RegisterOwnerResponse | null>(null);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -29,18 +25,8 @@ export default function SignupPage() {
     };
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/owner/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error ?? "Signup failed");
-      }
-
-      setResult({ slug: data.slug, trialEndsAt: data.trialEndsAt });
+      const data = await registerOwner(payload);
+      setResult(data);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Signup failed");
     } finally {

@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/ui/app_theme.dart';
+import '../../attendance/qr_attendance_page.dart';
+import '../../plans/presentation/plan_list_page.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final compact = screenWidth < 420;
+    final heroTitleSize = compact ? 32.0 : 46.0;
+    final heroSubtitleSize = compact ? 16.0 : 22.0;
+    final pitTitleSize = compact ? 44.0 : 52.0;
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
@@ -17,27 +25,27 @@ class DashboardPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _topBar(),
+                _topBar(context),
                 const SizedBox(height: 20),
-                const Text(
+                Text(
                   'Stay Hard, Arjun.',
                   style: TextStyle(
                     color: AppTheme.textPrimary,
-                    fontSize: 46,
+                    fontSize: heroTitleSize,
                     fontWeight: FontWeight.w800,
                     height: 0.98,
                     letterSpacing: -1.0,
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'No excuses. Just results.',
-                  style: TextStyle(color: AppTheme.textMuted, fontSize: 22, fontWeight: FontWeight.w500),
+                  style: TextStyle(color: AppTheme.textMuted, fontSize: heroSubtitleSize, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 20),
-                _challengeCard(),
+                _challengeCard(context),
                 const SizedBox(height: 20),
-                _pitButton(),
+                _pitButton(context, pitTitleSize),
                 const SizedBox(height: 20),
                 _premiumCard(),
                 const SizedBox(height: 14),
@@ -53,9 +61,29 @@ class DashboardPage extends StatelessWidget {
                 const SizedBox(height: 10),
                 _leaderboard(),
                 const SizedBox(height: 18),
-                _historyTile(Icons.history_toggle_off_rounded, 'Attendance History', '22 sessions this month'),
+                _historyTile(
+                  context,
+                  Icons.history_toggle_off_rounded,
+                  'Attendance History',
+                  '22 sessions this month',
+                  () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const QrAttendancePage()),
+                    );
+                  },
+                ),
                 const SizedBox(height: 12),
-                _historyTile(Icons.payments_outlined, 'Payment History', 'Last paid on Sep 20'),
+                _historyTile(
+                  context,
+                  Icons.payments_outlined,
+                  'Payment History',
+                  'Last paid on Sep 20',
+                  () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const PlanListPage()),
+                    );
+                  },
+                ),
                 const SizedBox(height: 16),
                 _liveTraffic(),
               ],
@@ -66,7 +94,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _topBar() {
+  Widget _topBar(BuildContext context) {
     return Row(
       children: [
         const Text(
@@ -74,28 +102,49 @@ class DashboardPage extends StatelessWidget {
           style: TextStyle(color: AppTheme.accent, fontSize: 34, fontWeight: FontWeight.w900, letterSpacing: -0.8),
         ),
         const Spacer(),
-        _iconPill(Icons.light_mode_outlined),
+        _iconPill(
+          Icons.light_mode_outlined,
+          () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Theme controls coming soon.')),
+            );
+          },
+        ),
         const SizedBox(width: 10),
-        _iconPill(Icons.notifications_none_rounded),
+        _iconPill(
+          Icons.notifications_none_rounded,
+          () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('No new notifications.')),
+            );
+          },
+        ),
         const SizedBox(width: 10),
         const CircleAvatar(radius: 20, backgroundColor: Color(0xFF2D3A61), child: Text('A', style: TextStyle(fontWeight: FontWeight.w700))),
       ],
     );
   }
 
-  Widget _iconPill(IconData icon) {
-    return Container(
-      width: 38,
-      height: 38,
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+  Widget _iconPill(IconData icon, VoidCallback onTap) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(16),
+        child: Container(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Icon(icon, color: AppTheme.textMuted, size: 20),
+        ),
       ),
-      child: Icon(icon, color: AppTheme.textMuted, size: 20),
     );
   }
 
-  Widget _challengeCard() {
+  Widget _challengeCard(BuildContext context) {
     return Container(
       decoration: AppTheme.darkCard(),
       padding: const EdgeInsets.all(18),
@@ -114,10 +163,17 @@ class DashboardPage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Row(
-            children: const [
-              Text('DAVID GOGGINS', style: TextStyle(color: AppTheme.textMuted, fontSize: 14, fontWeight: FontWeight.w700)),
-              Spacer(),
-              Text('COMPLETE CHALLENGE', style: TextStyle(color: AppTheme.accent, fontWeight: FontWeight.w800)),
+            children: [
+              const Text('DAVID GOGGINS', style: TextStyle(color: AppTheme.textMuted, fontSize: 14, fontWeight: FontWeight.w700)),
+              const Spacer(),
+              GestureDetector(
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Challenge marked complete.')),
+                  );
+                },
+                child: const Text('COMPLETE CHALLENGE', style: TextStyle(color: AppTheme.accent, fontWeight: FontWeight.w800)),
+              ),
             ],
           ),
         ],
@@ -125,30 +181,41 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _pitButton() {
-    return Container(
-      height: 108,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [AppTheme.accent, AppTheme.accentSoft]),
+  Widget _pitButton(BuildContext context, double titleSize) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
         borderRadius: BorderRadius.circular(999),
-        boxShadow: [
-          BoxShadow(color: AppTheme.accent.withValues(alpha: 0.45), blurRadius: 24, spreadRadius: 1),
-        ],
-      ),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.qr_code_rounded, size: 30, color: Colors.white),
-          SizedBox(width: 12),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('ENTER THE PIT', style: TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.w800, height: 0.95)),
-              Text('SCAN QR TO BEGIN WORKOUT', style: TextStyle(color: Color(0xFFFFD5DE), fontWeight: FontWeight.w700, letterSpacing: 0.6)),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const QrAttendancePage()),
+          );
+        },
+        child: Ink(
+          height: 108,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(colors: [AppTheme.accent, AppTheme.accentSoft]),
+            borderRadius: BorderRadius.circular(999),
+            boxShadow: [
+              BoxShadow(color: AppTheme.accent.withValues(alpha: 0.45), blurRadius: 24, spreadRadius: 1),
             ],
           ),
-        ],
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.qr_code_rounded, size: 30, color: Colors.white),
+              const SizedBox(width: 12),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('ENTER THE PIT', style: TextStyle(color: Colors.white, fontSize: titleSize, fontWeight: FontWeight.w800, height: 0.95)),
+                  const Text('SCAN QR TO BEGIN WORKOUT', style: TextStyle(color: Color(0xFFFFD5DE), fontWeight: FontWeight.w700, letterSpacing: 0.6)),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -204,30 +271,43 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _historyTile(IconData icon, String title, String subtitle) {
-    return Container(
-      decoration: AppTheme.darkCard(),
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-      child: Row(
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(20)),
-            child: Icon(icon, color: AppTheme.textMuted),
+  Widget _historyTile(
+    BuildContext context,
+    IconData icon,
+    String title,
+    String subtitle,
+    VoidCallback onTap,
+  ) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          decoration: AppTheme.darkCard(),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(20)),
+                child: Icon(icon, color: AppTheme.textMuted),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: const TextStyle(color: AppTheme.textPrimary, fontSize: 28, fontWeight: FontWeight.w700)),
+                    Text(subtitle, style: const TextStyle(color: AppTheme.textMuted, fontSize: 19)),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded, color: AppTheme.textMuted),
+            ],
           ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: const TextStyle(color: AppTheme.textPrimary, fontSize: 28, fontWeight: FontWeight.w700)),
-                Text(subtitle, style: const TextStyle(color: AppTheme.textMuted, fontSize: 19)),
-              ],
-            ),
-          ),
-          const Icon(Icons.chevron_right_rounded, color: AppTheme.textMuted),
-        ],
+        ),
       ),
     );
   }

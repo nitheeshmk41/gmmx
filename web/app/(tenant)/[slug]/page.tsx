@@ -1,17 +1,10 @@
-import { apiFetch } from "@/lib/api";
+import { fetchPublicGymProfile } from "@/lib/api";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export default async function TenantHome({ params }: Props) {
   const { slug } = await params;
-  const data = await apiFetch<{
-    slug: string;
-    gymName: string;
-    location: string;
-    about: string;
-    contactPhone: string;
-    themePrimary: string;
-  }>(`/api/public/${slug}`);
+  const data = await fetchPublicGymProfile(slug);
 
   return (
     <main className="container">

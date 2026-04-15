@@ -74,7 +74,7 @@ class PlanListPage extends ConsumerWidget {
 
 class _PlanCard extends StatelessWidget {
   final Plan plan;
-  _PlanCard(this.plan);
+  const _PlanCard(this.plan);
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +134,7 @@ class _PlanCard extends StatelessWidget {
 
 class _CreatePlanDialog extends StatefulWidget {
   final WidgetRef ref;
-  _CreatePlanDialog({required this.ref});
+  const _CreatePlanDialog({required this.ref});
 
   @override
   State<_CreatePlanDialog> createState() => _CreatePlanDialogState();
@@ -206,15 +206,25 @@ class _CreatePlanDialogState extends State<_CreatePlanDialog> {
   }
 
   Future<void> _createPlan() async {
-    if (nameCtrl.text.isEmpty || priceCtrl.text.isEmpty) return;
+    final name = nameCtrl.text.trim();
+    final price = int.tryParse(priceCtrl.text.trim());
+    final sessions = int.tryParse(sessionsCtrl.text.trim());
+
+    if (name.isEmpty || price == null || sessions == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Enter valid plan name, price, and sessions.')),
+      );
+      return;
+    }
+
     setState(() => isLoading = true);
     await Future.delayed(const Duration(seconds: 1));
     final newPlan = Plan(
       id: DateTime.now().toString(),
-      name: nameCtrl.text,
-      price: int.parse(priceCtrl.text),
-      sessionsPerMonth: int.parse(sessionsCtrl.text),
-      description: '${sessionsCtrl.text} sessions/month',
+      name: name,
+      price: price,
+      sessionsPerMonth: sessions,
+      description: '$sessions sessions/month',
     );
     widget.ref.read(planListProvider.notifier).state = [...widget.ref.read(planListProvider), newPlan];
     if (!mounted) return;
@@ -227,7 +237,7 @@ class _FormField extends StatefulWidget {
   final String label;
   final TextEditingController controller;
   final bool isNumber;
-  _FormField(this.label, this.controller, {this.isNumber = false});
+  const _FormField(this.label, this.controller, {this.isNumber = false});
 
   @override
   State<_FormField> createState() => _FormFieldState();

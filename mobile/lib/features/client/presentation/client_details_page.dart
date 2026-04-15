@@ -157,7 +157,7 @@ class ClientDetailsPage extends StatelessWidget {
 
 class _Card extends StatelessWidget {
   final String label, value;
-  _Card(this.label, this.value);
+  const _Card(this.label, this.value);
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +188,7 @@ class _Card extends StatelessWidget {
 class _InfoTile extends StatelessWidget {
   final IconData icon;
   final String label, value;
-  _InfoTile(this.icon, this.label, this.value);
+  const _InfoTile(this.icon, this.label, this.value);
 
   @override
   Widget build(BuildContext context) {

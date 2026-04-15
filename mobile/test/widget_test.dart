@@ -7,7 +7,8 @@ void main() {
     await tester.pumpWidget(const GmmxApp());
     await tester.pumpAndSettle();
 
-    expect(find.text('GMMX Login'), findsOneWidget);
+    expect(find.text('GMMX'), findsOneWidget);
+    expect(find.text('Get Started'), findsOneWidget);
     expect(find.text('Send OTP'), findsOneWidget);
   });
 }
